@@ -1,0 +1,40 @@
+package ${package.Entity};
+
+/**
+ * @author ${author}
+ * @since ${date}
+ */
+<#if entityLombokModel>
+@Data
+</#if>
+public class ${entity}{
+
+<#-- ----------  BEGIN 字段循环遍历  ---------->
+<#list table.fields as field>
+    <#if field.keyFlag>
+        <#assign keyPropertyName="${field.propertyName}"/>
+    </#if>
+    <#--字段注释-->
+    <#if field.comment!?length gt 0>
+    /**
+     * ${field.comment}
+     */
+    </#if>
+    private ${field.propertyType} ${field.propertyName};
+</#list>
+<#------------  END 字段循环遍历  ---------->
+<#if !entityLombokModel>
+    <#list table.fields as field>
+        <#if field.propertyType == "boolean">
+            <#assign getprefix="is"/>
+        <#else>
+            <#assign getprefix="get"/>
+        </#if>
+
+    public ${field.propertyType} ${getprefix}${field.capitalName}() {
+        return ${field.propertyName};
+    }
+    </#list>
+</#if>
+
+}
